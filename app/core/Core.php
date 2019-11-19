@@ -13,7 +13,8 @@ class Core {
         $router = new Router();
         $controller = $router->getController($this->url);
         if($controller['controller'] == ""){
-            die("Error - 404");
+            http_response_code(404);
+            die("Error 404 - Page not found");
         }
         $controller_arr = explode("@", $controller['controller']);
         $this->controller_name = $controller_arr[0];
@@ -24,13 +25,11 @@ class Core {
 
     public function set_basename(){
         if(dirname($_SERVER['SCRIPT_NAME']) != '/'){
-            //echo $_SERVER['SCRIPT_NAME'];
             $this->basename = dirname(str_replace("/public","",$_SERVER['SCRIPT_NAME']));
         }
     }
 
     public function init_query(){
-        //echo $_SERVER['REQUEST_URI'];
         $query = explode("?", str_replace($this->basename,"",$_SERVER['REQUEST_URI']));
         $query[0] = rtrim($query[0],'/');
         $query[0] = filter_var($query[0], FILTER_SANITIZE_URL);
@@ -53,7 +52,8 @@ class Core {
 
     public function load_controller(){
         $data = $this->controller_data;
-        $data['get'] = $this->get_data;
+        global $get_data;
+        $get_data = $this->get_data;
 
         $controller_path = APP_ROOT. '/controllers/' . $this->controller_name . '.php';
 
@@ -62,7 +62,8 @@ class Core {
             $controller = new $this->controller_name;
             $controller->call_by_method_name($this->method_name,$data);
         }else{
-            die("Controller doesn't exists");
+            http_response_code(404);
+            die("Error 404 - {$this->controller_name} not found");
         }
     }
 }

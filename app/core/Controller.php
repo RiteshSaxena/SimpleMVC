@@ -5,7 +5,8 @@ class Controller{
         if (method_exists($this, $method)) {
             call_user_func_array(array($this,$method), $data);
         } else {
-            die($method. " method not found");
+            http_response_code(404);
+            die("Error 404 - $method function not found");
         }
     }
 
@@ -20,11 +21,12 @@ class Controller{
     // Load view
     public function view($view, $data = []){
         // Check for view file
-        $view_file = APP_ROOT. '/views/' . $view . '.view.php';
+        $view_file = APP_ROOT. '/views/' . $view . '.php';
         if(file_exists($view_file)){
             require_once $view_file;
         } else {
-            die("View $view does not exist");
+            http_response_code(404);
+            die("Error 404 - View $view does not exist");
         }
     }
 
@@ -36,5 +38,15 @@ class Controller{
             header("location:" . URL_ROOT . "/" .$url);
         }
         die();
+    }
+
+    // response
+    public function json_response($code, $message, $data = []){
+        $response = [
+            "status" => $code,
+            "message" => $message,
+            "data" => $data
+        ];
+        echo json_encode($response);
     }
 }

@@ -31,15 +31,13 @@ class Database {
         $this->stmt->close();
     }
 
-    function num_rows(){
-        return $this->stmt->get_result()->num_rows;
-    }
-
     function get_result(){
-        $result = $this->stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $get_result = $this->stmt->get_result();
+        $result = $get_result->fetch_all(MYSQLI_ASSOC);
+        $num_rows = $get_result->num_rows;
         if(!$result)
-            return [];
-        return $result;
+            $result = [];
+        return [$num_rows, $result];
     }
 
     function refValues($arr){

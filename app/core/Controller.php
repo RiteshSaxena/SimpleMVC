@@ -32,10 +32,13 @@ class Controller{
 
     // redirect
     public function redirect($url, $external = false){
-        if($external){
+        if($external)
             header("location: $url");
-        }else{
-            header("location:" . URL_ROOT . "/" .$url);
+        else{
+            if ($url == "/" )
+                header("location:" . URL_ROOT . "/");
+            else
+                header("location:" . URL_ROOT . "/" .$url);
         }
         die();
     }

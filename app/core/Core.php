@@ -30,7 +30,11 @@ class Core {
     }
 
     public function init_query(){
-        $query = explode("?", str_replace($this->basename,"",$_SERVER['REQUEST_URI']));
+        if($this->basename != '/') {
+            $query = explode("?", str_replace($this->basename, "", $_SERVER['REQUEST_URI']));
+        } else {
+            $query = explode("?", $_SERVER['REQUEST_URI']);
+        }
         $query[0] = rtrim($query[0],'/');
         $query[0] = filter_var($query[0], FILTER_SANITIZE_URL);
 

@@ -1,5 +1,5 @@
 <?php
-include_once '../app/bootstrap.php';
+include_once '../core/bootstrap.php';
 
 // Init Core Library
 $init = new Core();

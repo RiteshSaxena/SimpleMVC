@@ -1,8 +1,22 @@
 <?php
 
 class Router {
-    private static $static_routes = [];
-    private static $dynamic_routes = [];
+    private static $static_routes = [
+        'GET' => [],
+        'POST' => [],
+        'PUT' => [],
+        'PATCH' => [],
+        'DELETE' => [],
+        'OPTIONS' => [],
+    ];
+    private static $dynamic_routes = [
+        'GET' => [],
+        'POST' => [],
+        'PUT' => [],
+        'PATCH' => [],
+        'DELETE' => [],
+        'OPTIONS' => [],
+    ];
 
     public function getController($url) {
         $controller = "";

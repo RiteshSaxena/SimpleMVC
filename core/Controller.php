@@ -21,6 +21,7 @@ class Controller {
 
     // Load view
     public function view($view, $data = []) {
+        extract($data);
         // Check for view file
         $view_file = APP_DIR . '/views/' . $view . '.php';
         if (file_exists($view_file)) {
@@ -71,5 +72,10 @@ class Controller {
     public function json($data) {
         header('Content-Type: application/json');
         echo json_encode($data);
+        die();
+    }
+
+    public function asset_version() {
+        return "?version=" . APP_VERSION;
     }
 }

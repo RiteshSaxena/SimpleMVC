@@ -15,39 +15,103 @@ class Database {
         $this->conn->close();
     }
 
-    function prepare($query){
+    private function prepare($query){
         $this->stmt = $this->conn->prepare($query);
     }
 
-    function bind($params){
+    private function bind($params){
         call_user_func_array(array($this->stmt, 'bind_param'), $this->refValues($params));
     }
 
-    function execute(){
+    private function execute(){
         $this->stmt->execute();
     }
 
-    function close(){
+    private function close(){
         $this->stmt->close();
     }
 
-    function get_result(){
-        $get_result = $this->stmt->get_result();
-        $result = $get_result->fetch_all(MYSQLI_ASSOC);
-        $num_rows = $get_result->num_rows;
-        if(!$result)
-            $result = [];
-        return [$num_rows, $result];
-    }
-
-    function refValues($arr){
+    private function refValues($arr){
         $refs = array();
         foreach($arr as $key => $value)
             $refs[$key] = &$arr[$key];
         return $refs;
     }
 
-    function error() {
+    private function fetch_results($mode = 0){
+        $get_result = $this->stmt->get_result();
+        if ($mode == 0 || $mode == 1) {
+            $result = $get_result->fetch_all(MYSQLI_ASSOC);
+            if(!$result)
+                $result = [];
+        }
+        if ($mode == 0 || $mode == 2)
+            $num_rows = $get_result->num_rows;
+
+        if ($mode == 1) {
+            return $result;
+        } else if ($mode == 2) {
+            return $num_rows;
+        } else {
+            return [$num_rows, $result];
+        }
+    }
+
+    private function stmt_error() {
+        return $this->stmt->error;
+    }
+
+    private function conn_error() {
         return $this->conn->error;
+    }
+
+    public function error() {
+        if ($this->stmt) {
+            return $this->stmt_error();
+        } else {
+            return $this->conn_error();
+        }
+    }
+
+    function run($query, $params = []){
+        $this->prepare($query);
+        if (count($params) > 0) {
+            $this->bind($params);
+        }
+        $this->execute();
+        $this->close();
+    }
+
+    function num_rows($query, $params = []){
+        $this->prepare($query);
+        if (count($params) > 0) {
+            $this->bind($params);
+        }
+        $this->execute();
+        $num_rows = $this->fetch_results(2);
+        $this->close();
+        return $num_rows;
+    }
+
+    function fetch($query, $params = []){
+        $this->prepare($query);
+        if (count($params) > 0) {
+            $this->bind($params);
+        }
+        $this->execute();
+        $result = $this->fetch_results(1);
+        $this->close();
+        return $result;
+    }
+
+    function query($query, $params = []){
+        $this->prepare($query);
+        if (count($params) > 0) {
+            $this->bind($params);
+        }
+        $this->execute();
+        $result = $this->fetch_results();
+        $this->close();
+        return $result;
     }
 }

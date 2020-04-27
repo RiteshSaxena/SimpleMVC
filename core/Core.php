@@ -40,19 +40,25 @@ class Core {
         global $body;
         $body = [];
         if (!empty($_SERVER['CONTENT_TYPE'])) {
+            $type = explode(';', $_SERVER['CONTENT_TYPE'])[0];
             $raw = file_get_contents('php://input');
-            switch ($_SERVER['CONTENT_TYPE']) {
+            switch ($type) {
                 case 'application/json':
                     $body = json_decode($raw, true);
                     break;
                 case 'application/x-www-form-urlencoded':
                     parse_str($raw, $body);
                     break;
+                default:
+                    $body = $_POST;
             }
         }
     }
 
     public function load_controller($controller_string) {
+        global $route;
+        $route = $this->request_uri;
+
         if ($controller_string == "") {
             http_response_code(404);
             die("Error 404 - Page not found");
@@ -64,7 +70,7 @@ class Core {
 
         if (file_exists($controller_path)) {
             require_once $controller_path;
-            $controller = new $controller_name;
+            $controller = new $controller_name($this->request_uri);
             if (method_exists($controller, $method_name)) {
                 $controller->$method_name();
             } else {

@@ -1,50 +1,42 @@
 <?php
-class MainController extends Controller {
-    public function __construct(){
-        parent::__construct();
-    }
+use \Core\Controller;
+use \Core\Request;
+use \Core\Response;
 
+class MainController extends Controller {
     // Route /
     // Method GET
-    public function index(){
-        $this->view('index');
+    public function index(Request $req, Response $res){
+        $res->render('index');
     }
 
-    // Route /test
-    // Method GET
-    public function test_route() {
-        $this->view('test_route');
-    }
 
     // Route /test
     // Method POST
-    public function test_route_post() {
-        global $body;
-        $this->view('test_route_with_id', ['id' => $body['id']]);
+    public function test_route_post(Request $req, Response $res) {
+        $res->render('test_route_with_id', ['id' => $req->body['id']]);
     }
 
     // Route /test/:id
     // Method GET
-    public function test_route_with_id() {
-        global $params;
-        $this->view('test_route_with_id', ['id' => $params['id']]);
+    public function test_route_with_id(Request $req, Response $res) {
+        $res->render('test_route_with_id', ['id' => $req->params['id']]);
     }
 
     // Route /test_query?id=3
     // Method GET
-    public function test_route_with_query() {
-        global $query;
-        $this->view('test_route_with_id', ['id' => $query['id']]);
+    public function test_route_with_query(Request $req, Response $res) {
+        $res->render('test_route_with_id', ['id' => $req->query['id']]);
     }
 
     // Route /test/json
     // Method GET
-    public function test_route_with_json() {
+    public function test_route_with_json(Request $req, Response $res) {
         $json = [
             'success' => true,
             'sample_data' => 'hello world'
         ];
-        $this->status(200);
-        $this->json($json);
+        $res->status(200);
+        $res->json($json);
     }
 }

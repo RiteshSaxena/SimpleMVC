@@ -2,7 +2,7 @@
 // App
 define("APP_NAME", "Minimal-PHP");
 define("APP_DIR", dirname(dirname(__FILE__)));
-define("APP_VERSION", "1.1");
+define("APP_VERSION", "2.0");
 define("APP_URL", "http://localhost");
 
 // Enable cors
@@ -12,7 +12,10 @@ define('ENABLE_CORS', false);
 define('REMOVE_POWERED_BY', false);
 
 // Enable Errors
-define('ENABLE_ERROR_REPORTING', false);
+define('ERROR_REPORTING', false);
+
+// Dev mode
+define('DEV_MODE', true);
 
 // Database
 define("DB_HOST", "db_host");

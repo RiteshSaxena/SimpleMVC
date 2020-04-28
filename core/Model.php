@@ -1,6 +1,8 @@
 <?php
+namespace Core;
+
 class Model {
-    protected $db;
+    protected Database $db;
 
     function __construct() {
         $this->db = new Database();

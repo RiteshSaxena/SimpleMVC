@@ -1,4 +1,5 @@
 <?php
+namespace Core;
 
 class Controller {
     public function __construct() {
@@ -11,7 +12,7 @@ class Controller {
     }
 
     // Load model
-    public function model($model) {
+    public function model(string $model): Model {
         // Require model file
         require_once APP_DIR . '/models/' . $model . '.php';
 
@@ -19,21 +20,8 @@ class Controller {
         return new $model();
     }
 
-    // Load view
-    public function view($view, $data = []) {
-        extract($data);
-        // Check for view file
-        $view_file = APP_DIR . '/views/' . $view . '.php';
-        if (file_exists($view_file)) {
-            require_once $view_file;
-        } else {
-            http_response_code(404);
-            die("Error 404 - View $view does not exist");
-        }
-    }
-
     // redirect
-    public function redirect($url, $permanent = false, $external = false) {
+    public function redirect(string $url, bool $permanent = false, bool $external = false): void {
         if ($permanent) {
             $this->status(302);
         } else {
@@ -49,33 +37,26 @@ class Controller {
 
     // cors
     public function cors(
-        $origin = '*',
-        $methods = 'PUT, PATCH, GET, POST, DELETE, OPTIONS',
-        $allowed_headers = 'Origin, X-Requested-With, Content-Type'
-    ) {
+        string $origin = '*',
+        string $methods = 'PUT, PATCH, GET, POST, DELETE, OPTIONS',
+        string $allowed_headers = 'Origin, X-Requested-With, Content-Type'
+    ): void {
         header("Access-Control-Allow-Origin: $origin");
         header("Access-Control-Allow-Methods: $methods");
         header("Access-Control-Allow-Headers: $allowed_headers");
     }
 
     // remove powered by
-    public function removed_powered_by() {
+    public function removed_powered_by(): void {
         header_remove('X-Powered-By');
     }
 
     // Set response code
-    public function status($status_code) {
+    public function status(int $status_code): void {
         http_response_code($status_code);
     }
 
-    // JSON
-    public function json($data) {
-        header('Content-Type: application/json');
-        echo json_encode($data);
-        die();
-    }
-
-    public function asset_version() {
+    public function asset_version(): string {
         return "?version=" . APP_VERSION;
     }
 }

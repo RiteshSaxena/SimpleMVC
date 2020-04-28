@@ -1,14 +1,16 @@
 <?php
+namespace Core;
+
 class Database {
-    private $host = DB_HOST;
-    private $user = DB_USER;
-    private $password = DB_PASSWORD;
-    private $database = DB_NAME;
-    private $conn;
-    private $stmt;
+    private string $host = DB_HOST;
+    private string $user = DB_USER;
+    private string $password = DB_PASSWORD;
+    private string $database = DB_NAME;
+    private \mysqli $conn;
+    private \mysqli_stmt $stmt;
 
     function __construct() {
-        $this->conn = new mysqli($this->host, $this->user, $this->password, $this->database);
+        $this->conn = new \mysqli($this->host, $this->user, $this->password, $this->database);
     }
 
     function __destruct() {

@@ -7,8 +7,8 @@ class Request {
     public array $params = [];
     public array $body = [];
 
-    public function header(string $name): string {
+    public function header(string $name, string $default = ""): string {
         $header_name = "HTTP_" . strtoupper(str_replace("-", "_", $name));
-        return $_SERVER[$header_name] ?? "";
+        return $_SERVER[$header_name] ?? $default;
     }
 }

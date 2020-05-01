@@ -1,5 +1,5 @@
 <?php
-namespace test;
+namespace App\test;
 
 use \Core\Controller;
 use \Core\Request;

@@ -20,21 +20,6 @@ class Controller {
         return new $model();
     }
 
-    // redirect
-    public function redirect(string $url, bool $permanent = false, bool $external = false): void {
-        if ($permanent) {
-            $this->status(302);
-        } else {
-            $this->status(301);
-        }
-        if ($external)
-            header("location: $url");
-        else {
-            header("location: " . APP_URL . $url);
-        }
-        die();
-    }
-
     // cors
     public function cors(
         string $origin = '*',
@@ -49,14 +34,5 @@ class Controller {
     // remove powered by
     public function removed_powered_by(): void {
         header_remove('X-Powered-By');
-    }
-
-    // Set response code
-    public function status(int $status_code): void {
-        http_response_code($status_code);
-    }
-
-    public function asset_version(): string {
-        return "?version=" . APP_VERSION;
     }
 }

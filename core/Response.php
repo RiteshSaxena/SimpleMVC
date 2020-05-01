@@ -44,4 +44,24 @@ class Response {
         echo json_encode($data);
         die();
     }
+
+    // set assets version
+    public function asset_version(): string {
+        return "?version=" . APP_VERSION;
+    }
+
+    // redirect
+    public function redirect(string $url, bool $permanent = false, bool $external = false): void {
+        if ($permanent) {
+            $this->status(302);
+        } else {
+            $this->status(301);
+        }
+        if ($external)
+            header("location: $url");
+        else {
+            header("location: " . APP_URL . $url);
+        }
+        die();
+    }
 }

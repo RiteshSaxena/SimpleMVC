@@ -69,7 +69,7 @@ class Init {
         }
 
         $controller_path = APP_DIR . '/controllers/' . str_replace("\\","/", $controller_name) . '.php';
-        $controller_name = "\\". $controller_name;
+        $controller_name = "\\App\\". $controller_name;
 
         if (file_exists($controller_path)) {
             require_once $controller_path;

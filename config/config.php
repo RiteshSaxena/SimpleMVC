@@ -2,7 +2,7 @@
 // App
 define("APP_NAME", "Minimal-PHP");
 define("APP_DIR", dirname(dirname(__FILE__)));
-define("APP_VERSION", "2.0");
+define("APP_VERSION", "2.1");
 define("APP_URL", "http://localhost");
 
 // Enable cors
@@ -15,10 +15,12 @@ define('REMOVE_POWERED_BY', false);
 define('ERROR_REPORTING', false);
 
 // Dev mode
-define('DEV_MODE', true);
+define('DEV_MODE', false);
 
 // Database
-define("DB_HOST", "db_host");
-define("DB_USER", "db_user");
-define("DB_PASSWORD", "db_pass");
-define("DB_NAME", "db_name");
+define("DB_DRIVER", "mysql"); // mysql, pgsql, etc
+//define("DB_PORT", 3306); // if usually a non default port
+define("DB_HOST", "localhost");
+define("DB_USER", "user");
+define("DB_PASSWORD", "password");
+define("DB_NAME", "dbname");

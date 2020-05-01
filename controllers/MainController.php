@@ -1,4 +1,6 @@
 <?php
+namespace App;
+
 use \Core\Controller;
 use \Core\Request;
 use \Core\Response;
@@ -9,7 +11,6 @@ class MainController extends Controller {
     public function index(Request $req, Response $res){
         $res->render('index');
     }
-
 
     // Route /test
     // Method POST

@@ -8,7 +8,7 @@ class Database {
 
     function __construct() {
         $dsn = DB_DRIVER . ":host=" . DB_HOST . ";dbname=" . DB_NAME;
-        if (defined('DB_PORT')) {
+        if (defined("DB_PORT")) {
             $dsn .= ";port=" . DB_PORT;
         }
         $options = [
@@ -38,9 +38,9 @@ class Database {
             $stmt = $this->conn->query($query);
         }
         $statement = strtolower(explode(" ", $query)[0]);
-        if ($statement === 'select' || $statement === 'show' || $statement === 'call' || $statement === 'describe') {
+        if ($statement === "select" || $statement === "show" || $statement === "call" || $statement === "describe") {
             return [$stmt->rowCount(), $stmt->fetchAll()];
-        } elseif ($statement === 'insert' || $statement === 'update' || $statement === 'delete') {
+        } elseif ($statement === "insert" || $statement === "update" || $statement === "delete") {
             return $stmt->rowCount();
         }
         return true;

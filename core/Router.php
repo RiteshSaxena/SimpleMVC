@@ -3,16 +3,7 @@
 namespace Core;
 
 class Router {
-    private static array $static_routes = [
-        "GET" => [],
-        "POST" => [],
-        "PUT" => [],
-        "PATCH" => [],
-        "DELETE" => [],
-        "OPTIONS" => [],
-    ];
-
-    private static array $dynamic_routes = [
+    private static array $routes = [
         "GET" => [],
         "POST" => [],
         "PUT" => [],
@@ -28,23 +19,24 @@ class Router {
         $method = $_SERVER["REQUEST_METHOD"];
 
         // if its a static route
-        if (isset(self::$static_routes[$method][$url])) {
-            $controller = self::$static_routes[$method][$url];
-            return [$controller, $params];
+        if (isset(self::$routes[$method][$url])) {
+            $controller = self::$routes[$method][$url];
+            return [true, $controller, $params];
         }
 
         // check for dynamic routes
         $url_array = explode("/", substr($url, 1));
         $url_array_len = count($url_array);
 
-        foreach (self::$dynamic_routes[$method] as $route => $route_controller) {
-            $matched = 1;
+        $matched = false;
+        foreach (self::$routes[$method] as $route => $route_controller) {
             $route_split = explode("/", substr($route, 1));
 
             if (count($route_split) != $url_array_len) {
                 continue;
             }
 
+            $matched = true;
             for ($i = 0; $i < count($route_split); $i++) {
                 if ($route_split[$i][0] == ":") {
                     $param_name = substr($route_split[$i], 1);
@@ -52,50 +44,45 @@ class Router {
                     continue;
                 }
                 if ($route_split[$i] != $url_array[$i]) {
-                    $matched = 0;
+                    $matched = false;
                     break;
                 }
             }
 
-            if ($matched == 1) {
+            if ($matched) {
                 $controller = $route_controller;
                 break;
             }
         }
         
-        return [$controller, $params];
+        return [$matched, $controller, $params];
     }
 
-    public static function add(string $method, string $url, callable $controller): void {
-        $dynamic = strpos($url, ":") !== false;
-        if ($dynamic) {
-            self::$dynamic_routes[$method][$url] = $controller;
-        } else {
-            self::$static_routes[$method][$url] = $controller;
-        }
+    public static function add(string $method, string $url, $controller): void {
+        self::$routes[$method][$url] = $controller;
     }
 
-    public static function get(string $url, callable $controller): void {
+    public static function get(string $url, $controller): void {
         self::add("GET", $url, $controller);
     }
 
-    public static function post(string $url, callable $controller): void {
+    public static function post(string $url, $controller): void {
         self::add("POST", $url, $controller);
     }
 
-    public static function put(string $url, callable $controller): void {
+    public static function put(string $url, $controller): void {
         self::add("PUT", $url, $controller);
     }
 
-    public static function patch(string $url, callable $controller): void {
+    public static function patch(string $url, $controller): void {
         self::add("PATCH", $url, $controller);
     }
 
-    public static function delete(string $url, callable $controller): void {
+    public static function delete(string $url, $controller): void {
         self::add("DELETE", $url, $controller);
     }
 
-    public static function options(string $url, callable $controller): void {
+    public static function options(string $url, $controller): void {
         self::add("OPTIONS", $url, $controller);
     }
 }

@@ -1,4 +1,8 @@
 <?php
+// APP Dir
+define("APP_DIR", dirname(dirname(__FILE__)));
+define("VIEWS_DIR", APP_DIR . "/views");
+
 // config
 require_once "../config/config.php";
 
@@ -9,17 +13,26 @@ if (DEV_MODE) {
 }
 
 // core libraries
-require_once APP_DIR . "/core/Request.php";
-require_once APP_DIR . "/core/Response.php";
-require_once APP_DIR . "/core/Router.php";
-require_once APP_DIR . "/core/Init.php";
+require_once "Request.php";
+require_once "Response.php";
+require_once "Router.php";
+require_once "Init.php";
 
 // load database libraries
-require_once APP_DIR . "/core/Database.php";
-require_once APP_DIR . "/core/Model.php";
+require_once "Database.php";
+require_once "Model.php";
+
+// load includes
+require_once "../config/includes.php";
+for($i = 0; $i < count($includes); $i++) {
+    $file = APP_DIR . $includes[$i];
+    if (file_exists($file)) {
+        require_once $file;
+    }
+}
 
 // load routes
-require_once APP_DIR . "/config/routes.php";
+require_once "../config/routes.php";
 
 // Init Core Library
 $init = new \Core\Init();

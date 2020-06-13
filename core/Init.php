@@ -9,11 +9,15 @@ class Init {
     public function __construct() {
         $this->request = new Request();
         $this->response = new Response();
-        $this->init_query();
-        $this->load_body();
-        list($controller, $this->request->params) = Router::getRoute($this->request->route);
         $this->load_defaults();
-        $this->load_controller($controller);
+        $this->init_query();
+        list($matched, $controller, $this->request->params) = Router::getRoute($this->request->route);
+        if ($matched) {
+            $this->load_body();
+            $this->load_controller($controller);
+        } else {
+            $this->response->render_error_page(404);
+        }
     }
 
     public function init_query(): void {
@@ -71,9 +75,19 @@ class Init {
 
     public function load_controller($controller): void {
         if (!$controller) {
-            $this->response->render_error_page(404);
+            $this->response->render_error_page(500);
         }
 
-        $controller($this->request, $this->response);
+        if (is_array($controller)) {
+            foreach ($controller as $method) {
+                if (is_callable($method)) {
+                    $method($this->request, $this->response);
+                }
+            }
+        } else if (is_callable($controller)) {
+            $controller($this->request, $this->response);
+        } else {
+            $this->response->render_error_page(500);
+        }
     }
 }
